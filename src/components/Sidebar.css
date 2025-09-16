@@ -1,0 +1,27 @@
+/* Sidebar.css */
+.sidebar {
+  width: 150px;
+  background: #f4f4f4;
+  padding: 10px;
+  border-right: 1px solid #ccc;
+  height: 100vh;
+}
+
+.sidebar h4 {
+  margin-bottom: 10px;
+}
+
+.icon-item {
+  margin: 8px 0;
+  font-size: 24px;
+  padding: 8px;
+  background: white;
+  border-radius: 6px;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+.icon-item:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
