@@ -1,51 +1,61 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import MarkerForm from "./components/markerForm";
+import Sidebar from "./components/sidebar";
 import "leaflet/dist/leaflet.css";
-import { Icon } from "leaflet";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import Hienthi from "./components/map";
+import { themMarker, fetchMarker  } from "./store/markerslice";
 
 export default function App() {
-  const [markers, setMarkers] = useState([]);
+  const dispatch = useDispatch();
+  const markersFromRedux = useSelector((state) => state.markers.list);
 
-  const customIcon = new Icon({
-    iconUrl: require("./img/marker-icon.png"),
-    iconSize: [38, 38],
-  });
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/markers")
-      .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Markers data:", data); // Debug dữ liệu
-        setMarkers(data);
-      })
-      .catch((err) => console.error("Fetch error:", err));
-  }, []);
+    dispatch(fetchMarker()); 
+  }, [dispatch]);
+  const [newMarker, setNewMarkers] = useState(null);
+  const [formData, setFormData] = useState({ name: "", desc: "", iconSrc: "" });
+
+  const Xuly = async (e) => {
+    e.preventDefault();
+    if (!newMarker) return;
+
+    const markerData = {
+      geocode: [newMarker.lat, newMarker.lng],
+      popup: `${formData.name}: ${formData.desc}`, 
+      iconSrc: formData.iconSrc || "/img/marker-icon.png",
+      name: formData.name,
+      desc: formData.desc,
+    };
+
+    
+      dispatch(themMarker(markerData));
+   
+
+    setNewMarkers(null);
+    setFormData({ name: "", desc: "", iconSrc: "" });
+  };
+
+  const handleDrop = (latlng, icon) => {
+    setNewMarkers({ lat: latlng.lat, lng: latlng.lng });
+    setFormData({ name: "", desc: "", iconSrc: icon.src });
+  };
 
   return (
-    <MapContainer
-      center={[21.028511, 105.804817]}
-      zoom={13}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {markers.length > 0 ? (
-        markers.map((marker, index) => (
-          <Marker key={index} position={marker.geocode} icon={customIcon}>
-            <Popup>{marker.popup || "No popup content"}</Popup>
-          </Marker>
-        ))
-      ) : (
-        <Marker position={[21.028511, 105.804817]} icon={customIcon}>
-          <Popup>Test Popup</Popup>
-        </Marker>
+    <div style={{ display: "flex" }}>
+      <Sidebar />
+      <div style={{ flex: 1 }}>
+        <Hienthi onDrop={handleDrop} />
+      </div>
+      {newMarker && (
+        <MarkerForm
+          newMarker={newMarker}
+          formData={formData}
+          setFormData={setFormData}
+          Xuly={Xuly}
+        />
       )}
-    </MapContainer>
+    </div>
   );
 }
