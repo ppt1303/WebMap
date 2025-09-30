@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./backend/QAMtest/main.py",
+        "./backend/QAMtest"
+    ]
+}
