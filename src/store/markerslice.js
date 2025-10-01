@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const fetchMarker = createAsyncThunk("markers/fetch", async () => {
-  const res = await fetch("http://localhost:5000/api/markers");
+  const res = await fetch("http://localhost:8000/api/markers");
   return res.json();
 });
 
 export const themMarker = createAsyncThunk("markers/add", async (markerData) => {
-  const res = await fetch("http://localhost:5000/api/markers", {
+  const res = await fetch("http://localhost:8000/api/markers", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(markerData),
@@ -15,7 +15,7 @@ export const themMarker = createAsyncThunk("markers/add", async (markerData) => 
 });
 
 export const xoaMarker = createAsyncThunk("markers/delete", async (id) => {
-  const res = await fetch(`http://localhost:5000/api/markers/${id.toString()}`, {
+  const res = await fetch(`http://localhost:8000/api/markers/${id.toString()}`, {
     method: "DELETE",
   });
 
