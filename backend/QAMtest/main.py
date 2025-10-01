@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from bson import ObjectId
 from typing import List
@@ -51,3 +51,20 @@ async def delete_marker(marker_id: str):
     if result.deleted_count == 1:
         return {"message": "Deleted", "id": marker_id}
     raise HTTPException(status_code=404, detail="Marker not found")
+# Sửa marker theo id
+@app.put("/api/markers/{marker_id}", response_model=Marker)
+async def update_marker(marker_id: str, marker_data: dict = Body(...)):
+    # loại bỏ key "id" nếu có, vì MongoDB dùng _id
+    if "id" in marker_data:
+        marker_data.pop("id")
+
+    result = await markers_collection.update_one(
+        {"_id": ObjectId(marker_id)},
+        {"$set": marker_data}
+    )
+
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Marker not found")
+
+    updated_marker = await markers_collection.find_one({"_id": ObjectId(marker_id)})
+    return marker_helper(updated_marker)

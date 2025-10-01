@@ -43,7 +43,7 @@ function DropHandler({ onDrop }) {
   return null;
 }
 
-export default function Hienthi({ onDrop }) {
+export default function Hienthi({ onDrop, onEdit }) {
   const dispatch = useDispatch();
   const markers = useSelector((state) => state.markers.list || []);
 
@@ -77,6 +77,21 @@ export default function Hienthi({ onDrop }) {
               <div>
               <b>{m.popup}</b>
               <br />
+              <button
+                  onClick={() => onEdit?.(m)}
+                  style={{
+                    marginTop: "5px",
+                    padding: "3px 6px",
+                    background: "blue",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    marginRight: "5px"
+                  }}
+                >
+                  Sửa
+                </button>
               <button
                 onClick={() => {console.log("Xoá marker id:", m.id);
                   dispatch(xoaMarker(m.id))}}

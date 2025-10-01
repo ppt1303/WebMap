@@ -26,6 +26,20 @@ export const xoaMarker = createAsyncThunk("markers/delete", async (id) => {
   return id; // chỉ trả về id để reducer xử lý
 });
 
+// quản anh minh thêm
+export const updateMarker = createAsyncThunk(
+  "markers/update",
+  async ({ id, updates }) => {
+    const res = await fetch(`http://localhost:5000/api/markers/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    });
+    if (!res.ok) throw new Error("Update failed");
+    return res.json();
+  }
+);
+
 const markersSlice = createSlice({
   name: "markers",
   initialState: { list: [] },
@@ -43,8 +57,15 @@ const markersSlice = createSlice({
           console.log("Reducer xoá marker id:", deletedId);
 
           state.list = state.list.filter((m) => m.id.toString() !== deletedId);
+          })
+      .addCase(updateMarker.fulfilled, (state, action) => {
+          const updated = action.payload;
+          const index = state.list.findIndex((m) => m.id === updated.id);
+         if (index !== -1) 
+        {
+         state.list[index] = updated;
+        }
           });
-
   },
 });
 
