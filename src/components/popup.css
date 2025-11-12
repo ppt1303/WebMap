@@ -1,0 +1,170 @@
+
+.map-root {
+  position: relative;
+  height: 100vh; 
+}
+
+.side-popup-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  pointer-events: auto;
+  overflow: hidden;
+  padding: 12px;
+  box-sizing: border-box;
+  width: 360px;
+}
+
+.side-popup-container .popup-scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 8px;
+  box-sizing: border-box;
+}
+
+.popup-card {
+  width: 100%;
+  height: calc(100vh - 24px); 
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(8, 30, 63, 0.12);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+  color: white;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-header .title {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.popup-header .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.popup-header .actions button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.btn-delete {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-edit {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-route {
+  background: #0b57d0;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.popup-body {
+  padding: 16px;
+  font-size: 14px;
+  color: #1f2937;
+  line-height: 1.6;
+  overflow-y: auto;
+  flex: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* fields */
+.pb-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pb-row label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+}
+.pb-row .value {
+  color: #111827;
+  font-size: 14px;
+}
+.pb-row input,
+.pb-row textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 13px;
+}
+
+.popup-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: auto;
+}
+
+@media (max-width: 900px) {
+  .side-popup-container {
+    width: 280px;
+    padding: 8px;
+  }
+  .popup-card { height: calc(100vh - 16px); }
+  .popup-body { padding: 12px; }
+}
+.leaflet-container {
+  z-index: 1 !important;
+}
+
+.side-popup-container,
+.side-popup-container * {
+  z-index: 2000 !important;
+  pointer-events: auto !important;
+}
