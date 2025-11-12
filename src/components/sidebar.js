@@ -4,12 +4,12 @@ import { markerTamThoi } from "../store/markerslice";
 import "./Sidebar.css";
 
 
-export default function Sidebar() {
+export default function Sidebar() { 
     const dispatch = useDispatch();
 
     const icons = [
         {
-        src: "/img/nhà.jpg",
+        src: "/img/nhà.png",
         alt: "nhà",
         popup: "Nhà ở Hà Nội",
     },

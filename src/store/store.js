@@ -1,9 +1,13 @@
+// store/index.js
 import { configureStore } from "@reduxjs/toolkit";
-import markerReducer from "./markerslice"
+import markersReducer from "./markerslice";
+import authReducer from "./authSlice";
 
-
-export const store = configureStore({
-    reducer: {
-        markers: markerReducer,
-    },
+const store = configureStore({
+  reducer: {
+    markers: markersReducer,
+    auth: authReducer, 
+  },
 });
+
+export default store;
