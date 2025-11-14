@@ -5,4 +5,5 @@ DB_NAME="webmap"
 
 client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
-col = db["db_test"]
+col1 = db["db_test"]
+col2= db["login"]

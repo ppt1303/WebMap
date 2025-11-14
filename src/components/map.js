@@ -111,6 +111,7 @@ export default function Hienthi({ onDrop, currentUser }) {
     if (m == null) return "-";
     if (m >= 1000) return (m / 1000).toFixed(1) + " km";
     return Math.round(m) + " m";
+    // return m;
   };
   const fmtDuration = (s) => {
     if (s == null) return "-";
@@ -118,7 +119,8 @@ export default function Hienthi({ onDrop, currentUser }) {
     if (mins < 60) return mins + " min";
     const h = Math.floor(mins / 60);
     const rem = mins % 60;
-    return `${h}h ${rem}m`;
+    return `${h}h ${rem}m`; 
+    // return s;
   };
 
 

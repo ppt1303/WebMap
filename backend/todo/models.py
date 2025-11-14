@@ -1,16 +1,21 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-class MarkerIn(BaseModel):
-    geocode: List[float]         
+class MarkerBase(BaseModel):
     name: str
+    geocode: List[float]
+    iconSrc: Optional[str] = "/img/marker-icon.png"
     desc: Optional[str] = None
+
+class Marker(MarkerBase):
+    id: int
+
+class MarkerUpdate(BaseModel):
+    name: Optional[str] = None
+    desc: Optional[str] = None
+    amount: Optional[str] = None
     iconSrc: Optional[str] = None
-    popup: Optional[str] = None
-
-class MarkerOut(MarkerIn):
-    id: str = Field(..., alias="_id")
-
-def to_out(doc) -> MarkerOut:
-    doc["_id"] = str(doc["_id"])
-    return MarkerOut(**doc)
+    geocode: Optional[List[float]] = None
+class UserLogin(BaseModel):
+    username: str
+    password: str
