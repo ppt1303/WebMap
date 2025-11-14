@@ -29,6 +29,7 @@ export default function App() {
     const markerData = {
       geocode: [newMarker.lat, newMarker.lng],
       popup: `${formData.name}: ${formData.desc}`,
+      amount: parseInt(formData.amount) || 0,
       iconSrc: formData.iconSrc || "/img/marker-icon.png",
       name: formData.name,
       desc: formData.desc,

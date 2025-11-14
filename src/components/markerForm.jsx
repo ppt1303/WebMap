@@ -33,6 +33,12 @@
             required
           />
           <br />
+                    <textarea
+            placeholder="Số lượng thiết bị"
+            value= {formData.amount}
+            onChange={(a) => setFormData({...formData, amount:a.target.value})}
+            required
+          />
           <button type= "submit">Lưu Marker</button> 
         </form>
       );

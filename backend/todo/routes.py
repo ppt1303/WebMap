@@ -21,9 +21,9 @@ async def login(data: UserLogin):
 
 next_id = 1
 
-@route.get("/api/markers", response_model=List[Marker])
-async def get_markers():
-    return [{**m, "geocode": [m["lat"], m["lng"]]} for m in markers_db]
+# @route.get("/api/markers", response_model=List[Marker])
+# async def get_markers():
+#     return [{**m, "geocode": [m["lat"], m["lng"]]} for m in markers_db]
 
 @route.post("/api/markers", response_model=Marker, status_code=201)
 async def create_marker(marker: MarkerBase):
@@ -34,8 +34,7 @@ async def create_marker(marker: MarkerBase):
         "id": next_id,
         "name": marker.name,
         "desc": marker.desc,
-        "lat": marker.geocode[0],
-        "lng": marker.geocode[1],
+        "amount": marker.amount,
         "geocode": marker.geocode,
         "iconSrc": marker.iconSrc or "/img/marker-icon.png",
     }
@@ -45,24 +44,25 @@ async def create_marker(marker: MarkerBase):
 
 @route.put("/api/markers/{marker_id}", response_model=Marker)
 async def update_marker(marker_id: int, updated: MarkerUpdate):
-    for m in markers_db:
-        if m["id"] == marker_id:
-            if updated.geocode and len(updated.geocode) == 2:
-                m["lat"] = float(updated.geocode[0])
-                m["lng"] = float(updated.geocode[1])
-                m["geocode"] = updated.geocode
+    for m in col1.find():
+        if m["name"] == updated.name:
+            # if updated.geocode and len(updated.geocode) == 2:
+            #     m["geocode"] = updated.geocode
             if updated.name is not None: m["name"] = updated.name
             if updated.desc is not None: m["desc"] = updated.desc
             if updated.amount is not None: m["amount"] = updated.amount
             if updated.iconSrc is not None: m["iconSrc"] = updated.iconSrc
+            col1.update_one({"id": marker_id}, {"$set": m})
             return m
+
     raise HTTPException(status_code=404, detail="Marker không tồn tại")
 
 @route.delete("/api/markers/{marker_id}")
 async def delete_marker(marker_id: int):
-    global markers_db
-    before = len(markers_db)
-    markers_db = [m for m in markers_db if m["id"] != marker_id]
-    if len(markers_db) == before:
+    # global markers_db
+    #before = len(markers_db)
+    markers_db = [m for m in col1.find() if m["id"] != marker_id]
+    if not (markers_db): #== before:
         raise HTTPException(status_code=404, detail="Marker không tồn tại")
+    col1.delete_one({"id": marker_id})
     return {"message": "Đã xóa", "id": marker_id}
