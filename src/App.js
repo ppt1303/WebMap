@@ -42,9 +42,7 @@ const [globalItems, setGlobalItems] = useState([]);
         name: formData.name,
         desc: formData.desc,
         iconSrc: formData.iconSrc || "/img/marker-icon.png",
-        // prefer items array if present
         items: Array.isArray(formData.items) ? formData.items.map(it => ({ name: it.name, qty: Number(it.qty) || 0 })) : undefined,
-        // backward-compatible fields (server accepts them too)
         item: Array.isArray(formData.items) && formData.items[0] ? formData.items[0].name : (formData.item || null),
         amount: Array.isArray(formData.items) ? (formData.items.reduce((s, it) => s + (Number(it.qty)||0), 0)) : (parseInt(formData.amount) || 0),
       };

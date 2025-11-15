@@ -8,19 +8,16 @@ import MapController from "./MapController";
 import { fetchMarker, xoaMarker, suaMarker } from "../store/markerslice";
 import "./popup.css";
 
-// helper: normalize marker shape -> ensure items: [{name, qty}], item, amount, geocode
 function normalizeMarker(m) {
   if (!m) return m;
   const out = { ...m };
 
-  // geocode fallback
   if (!out.geocode && out.lat != null && out.lng != null) {
     const lat = Number(out.lat);
     const lng = Number(out.lng);
     if (!Number.isNaN(lat) && !Number.isNaN(lng)) out.geocode = [lat, lng];
   }
 
-  // normalize items
   let itemsRaw = out.items;
   const normalized = [];
 
@@ -31,13 +28,11 @@ function normalizeMarker(m) {
         normalized.push({ name: it, qty: 1 });
         continue;
       }
-      // dict-like or model
       const name = it.name ?? it.item ?? it.label ?? it.itemName ?? null;
       const qty = Number(it.qty ?? it.quantity ?? it.amount ?? 0) || 0;
       if (name) normalized.push({ name, qty });
     }
   } else if (out.item) {
-    // old schema: item + amount
     normalized.push({ name: out.item, qty: Number(out.amount || 0) || 0 });
   }
 
@@ -108,17 +103,14 @@ export default function Hienthi({ onDrop, currentUser }) {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [editingMarker, setEditingMarker] = useState(null);
-  // editForm.items is array of { name, qty }
   const [editForm, setEditForm] = useState({ idUnit: "", name: "", desc: "", iconSrc: "", items: [] });
 
   const [dbItems, setDbItems] = useState([]);
   const [localAddedItems, setLocalAddedItems] = useState([]);
 
-  // edit add item inputs
   const [editSelectedItem, setEditSelectedItem] = useState("");
   const [editSelectedQty, setEditSelectedQty] = useState(1);
 
-  // unify dropdown sources
   const itemsForDropdown = [...dbItems, ...localAddedItems].reduce((acc, cur) => {
     const name = cur.name || cur.label || cur.itemName;
     if (!acc.find((i) => i.name === name)) acc.push({ ...cur, name });
@@ -410,7 +402,6 @@ export default function Hienthi({ onDrop, currentUser }) {
               prev && prev.idUnit === payload.idUnit ? normalizeMarker(res) : prev
             );
           } else {
-            // server trả không object (hiếm) -> fallback dùng updates (local)
             setSelectedMarker((prev) =>
               prev && prev.idUnit === payload.idUnit ? normalizeMarker({ ...prev, ...updates }) : prev
             );
@@ -418,7 +409,6 @@ export default function Hienthi({ onDrop, currentUser }) {
       setEditingMarker(null);
     } catch (err) {
       console.warn("Lưu marker thất bại — chi tiết:", err);
-      // keep form open so user can retry or adjust
     }
   };
 
@@ -434,7 +424,6 @@ export default function Hienthi({ onDrop, currentUser }) {
     }
   };
 
-  // helper: display selectedMarker items as "name: qty chiếc, ..."
   const selectedMarkerItemsDisplay = (() => {
     if (!selectedMarker) return "-";
     if (Array.isArray(selectedMarker.items) && selectedMarker.items.length > 0) {
@@ -454,7 +443,6 @@ export default function Hienthi({ onDrop, currentUser }) {
 
   return (
     <div className="map-root" style={{ height: "100vh", position: "relative" }}>
-      {/* Controls */}
       <div style={{ position: "absolute", left: 12, bottom: 12, zIndex: 1200, display: "flex", gap: 8 }}>
         <button onClick={() => setHandDrawnPath([])} style={{ background: "#fff", padding: "8px 12px", borderRadius: 8 }}>
           Xóa đường vẽ
@@ -560,7 +548,6 @@ export default function Hienthi({ onDrop, currentUser }) {
                       <input value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
                     </div>
 
-                    {/* NOTE: removed global 'Số lượng' input — per-item qty used instead */}
 
                     <div className="pb-row">
                       <label>Vật chất:</label>
@@ -607,7 +594,6 @@ export default function Hienthi({ onDrop, currentUser }) {
                 ) : (
                   <>
                     <div className="pb-row"><label>Địa chỉ:</label><div className="value">{selectedMarker.geocode ? `${Number(selectedMarker.geocode[0]).toFixed(6)}, ${Number(selectedMarker.geocode[1]).toFixed(6)}` : "-"}</div></div>
-                    {/* hide global amount display, show per-item lines instead */}
                     <div className="pb-row"><label>Vật chất:</label><div className="value">{selectedMarkerItemsDisplay}</div></div>
                     <div className="pb-row"><label>Mô tả:</label><div className="value">{selectedMarker.desc || "-"}</div></div>
                   </>
