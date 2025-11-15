@@ -1,21 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const login = createAsyncThunk("auth/login", async ({ username, password }, { rejectWithValue }) => {
-  try {
-    const res = await fetch("http://localhost:8000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      return rejectWithValue(err.detail || "Đăng nhập thất bại");
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ username, password }, { rejectWithValue }) => {
+    try {
+      const res = await fetch("http://localhost:8000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        return rejectWithValue(err.detail || "Đăng nhập thất bại");
+      }
+      return await res.json();
+    } catch (err) {
+      return rejectWithValue("Lỗi mạng");
     }
-    return await res.json();
-  } catch (err) {
-    return rejectWithValue("Lỗi mạng");
   }
-});
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -40,12 +43,12 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-          state.loading = false;
-          state.token = action.payload.access_token;     
-          state.user = action.payload.user;
-          state.isAuthenticated = true;
-          state.error = null;
-        })
+        state.loading = false;
+        state.token = action.payload.access_token;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -54,4 +57,4 @@ const authSlice = createSlice({
 });
 
 export const { logout } = authSlice.actions;
-export default authSlice.reducer; 
+export default authSlice.reducer;
